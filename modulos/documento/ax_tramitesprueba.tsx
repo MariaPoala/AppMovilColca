@@ -86,7 +86,18 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         setTipoEdicion(EnumTipoEdicion.VISUALIZAR)
         setEstadoEdicion(EnumEstadoEdicion.GUARDADO);
     }
+    async function downloadImage(imageSrc:any) {
+        const image = await fetch(imageSrc)
+        const imageBlog = await image.blob()
+        const imageURL = URL.createObjectURL(imageBlog)
 
+        const link = document.createElement('a')
+        link.href = imageURL
+        link.download = 'formato.jpg'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
     async function FndescargarImg() {
         try {
             if (archivo) {
@@ -95,12 +106,13 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                     throw error
                 }
                 if (signedURL) {
-                    const a = document.createElement("a");
-                    a.href = signedURL;
-                    a.download = archivo;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    await downloadImage(signedURL)
+                    // const a = document.createElement("a");
+                    // a.href = signedURL;
+                    // a.download = archivo;
+                    // document.body.appendChild(a);
+                    // a.click();
+                    // document.body.removeChild(a);
                 }
             }
         } catch (error: any) {
