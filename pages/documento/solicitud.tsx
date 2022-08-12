@@ -123,7 +123,12 @@ export default function AxPageDocumento() {
         }
         if (signedURL) {
           //PARA ABRIR EN UNA NUEVA PESTAÑA
-          window.open(signedURL, "_blank")?.focus();
+         const a= document.createElement("a");
+         a.href=signedURL;
+         a.download=archivo;
+         document.body.appendChild(a);
+         a.click();
+         document.body.removeChild(a); 
 
         }
       }

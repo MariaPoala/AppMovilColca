@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState, Fragment } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { Dialog, Transition } from "@headlessui/react";
-import { AxInput} from 'components/form'
+import { AxInput } from 'components/form'
 import { EnumTipoEdicion, EnumEstadoEdicion, TypeFormularioProps } from 'lib/edicion'
 import { CheckIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, LinkIcon, PlusCircleIcon } from "@heroicons/react/outline"
 import TipoDocumentoModel from 'models/tipo_documento_model'
@@ -42,7 +42,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     const [uploading, setUploading] = useState(false)
     const [urlArchivo, setUrlArchivo] = useState("")
     const [archivo, setArchivo] = useState("")
-  
+
     useEffect(() => {
         setIsLoading(true)
         setClicVisualizarArchivo(false)
@@ -89,7 +89,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
 
     async function FndescargarImg() {
         console.log(archivo);
-        
+
         try {
             if (archivo) {
                 const { signedURL, error } = await supabase.storage.from('archivo-requisito').createSignedUrl(archivo, 60)
@@ -97,7 +97,12 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                     throw error
                 }
                 if (signedURL) {
-                    window.open(signedURL, "_blank")?.focus();
+                    const a = document.createElement("a");
+                    a.href = signedURL;
+                    a.download = archivo;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
                 }
             }
         } catch (error: any) {
@@ -168,8 +173,8 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                         </div>
                                         <div className="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 md:grid-cols-6">
                                             <div className="md:col-span-2">
-                                               <p className="ml-2 font-san text-slate-700	">{formData.descripcion}</p>
-                                            </div>                                            
+                                                <p className="ml-2 font-san text-slate-700	">{formData.descripcion}</p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="">
@@ -178,8 +183,8 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                         </div>
                                         <div className="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 md:grid-cols-6">
                                             <div className="md:col-span-2">
-                                               <p className="ml-2 font-san text-slate-700	">{formData.tiempo_entrega} dias</p>
-                                            </div>                                            
+                                                <p className="ml-2 font-san text-slate-700	">{formData.tiempo_entrega} dias</p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="">
@@ -188,8 +193,8 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                         </div>
                                         <div className="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 md:grid-cols-6">
                                             <div className="md:col-span-2">
-                                               <p className="ml-2 font-san text-slate-700	">S/ {formData.costo}</p>
-                                            </div>                                            
+                                                <p className="ml-2 font-san text-slate-700	">S/ {formData.costo}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -207,7 +212,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                                     <div className="flex justify-between space-x-3">
                                                         <div className="min-w-0 flex-1 cursor-pointer">
                                                             <p className="mt-2 flex items-center text-[15px] text-gray-500 font-sans italic">
-                                                               - {item.nombre_requisito}
+                                                                - {item.nombre_requisito}
                                                                 <LinkIcon className="flex-shrink-0 ml-2 h-4 w-4 text-blue-500" aria-hidden="true" />
                                                             </p>
                                                         </div>
@@ -242,7 +247,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
 
 
 
-                                
+
                             </form >
                         </div >
                     </div>
