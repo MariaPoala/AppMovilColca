@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState, Fragment } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { Dialog, Transition } from "@headlessui/react";
-import { AxInput, AxModalEliminar, AxSubmit, AxBtnEliminar, AxBtnEditar, AxBtnCancelar } from 'components/form'
+import { AxInput} from 'components/form'
 import { EnumTipoEdicion, EnumEstadoEdicion, TypeFormularioProps } from 'lib/edicion'
 import { CheckIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, LinkIcon, PlusCircleIcon } from "@heroicons/react/outline"
 import TipoDocumentoModel from 'models/tipo_documento_model'
@@ -242,15 +242,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
 
 
 
-                                {
-                                    tipoEdicion != EnumTipoEdicion.VISUALIZAR &&
-                                    <div className="pt-5">
-                                        <div className="flex justify-end">
-                                            <AxBtnCancelar tipoEdicion={tipoEdicion} setEstadoEdicion={setEstadoEdicion} setTipoEdicion={setTipoEdicion} setID={setID} />
-                                            <AxSubmit loading={isSubmitting} />
-                                        </div>
-                                    </div>
-                                }
+                                
                             </form >
                         </div >
                     </div>

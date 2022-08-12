@@ -2,7 +2,6 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import { EnumTipoEdicion } from 'lib/edicion'
-import { AxBtnSubmitEliminar, AxBtnModalCancelar } from 'components/form'
 
 export default function AxModalEliminar({ setOpen, setTipoEdicion, formData, isSubmitting, handleSubmit, nombreModal }: any) {
     return <>
@@ -30,18 +29,7 @@ export default function AxModalEliminar({ setOpen, setTipoEdicion, formData, isS
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <div className="pt-5">
-                                <div className="flex justify-end">
-                                    <AxBtnModalCancelar setTipoEdicion={setTipoEdicion} setOpen={setOpen}></AxBtnModalCancelar>
-                                    <AxBtnSubmitEliminar loading={isSubmitting}
-                                        onClick={(event: any) => {
-                                            setTipoEdicion(EnumTipoEdicion.ELIMINAR);
-                                            handleSubmit(event);
-                                        }} />
-                                </div>
-                            </div>
-                        </div>
+                       
                     </Dialog.Panel>
                 </Transition.Child>
             </div>
