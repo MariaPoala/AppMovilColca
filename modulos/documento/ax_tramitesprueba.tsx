@@ -88,8 +88,6 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     }
 
     async function FndescargarImg() {
-        console.log(archivo);
-
         try {
             if (archivo) {
                 const { signedURL, error } = await supabase.storage.from('archivo-requisito').createSignedUrl(archivo, 60)
