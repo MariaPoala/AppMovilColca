@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 
 import useSWRImmutable from "swr/immutable"
 import Head from 'next/head'
-import { SearchIcon, FilterIcon, ChevronRightIcon, MailIcon, UserAddIcon, UsersIcon, PlusIcon } from '@heroicons/react/solid'
+import { SearchIcon, ChevronRightIcon, DocumentIcon} from '@heroicons/react/solid'
 import AxInicio from 'components/layout/ax_inicio'
 import AxRequisito from 'modulos/documento/ax_tramitesprueba'
 import { EnumEstadoEdicion } from 'lib/edicion'
@@ -121,8 +121,8 @@ export default function AxPageRequisito() {
                                         </ul>
                                         {textoFiltro !== '' && listaFiltro.length === 0 && (
                                             <div className="py-14 px-4 text-center sm:px-14">
-                                                <UsersIcon className="mx-auto h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                <p className="mt-4 text-sm text-gray-900">No se encontraron tipod de documentos usando ese término de búsqueda.</p>
+                                                <DocumentIcon className="mx-auto h-6 w-6 text-gray-400" aria-hidden="true" />
+                                                <p className="mt-4 text-sm text-gray-900">No se encontraron tipos de documentos usando ese término de búsqueda.</p>
                                             </div>
                                         )}
                                     </div>

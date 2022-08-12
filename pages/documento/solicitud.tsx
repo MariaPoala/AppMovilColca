@@ -3,21 +3,15 @@ import { Fragment, useEffect, useState } from 'react'
 import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import useSWRImmutable from "swr/immutable"
 import useSWR from "swr"
-import { CheckCircleIcon, LinkIcon, RefreshIcon, XIcon, UploadIcon, ExclamationIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
-import { Dialog, Transition } from '@headlessui/react';
-import { AxSelectFiltro, AxBtnAgregarArchivoSolicitud, AxBtnEditarSolicitud, AxSelect, AxInput } from 'components/form';
+import { LinkIcon} from '@heroicons/react/outline';
+import {  AxInput } from 'components/form';
 import { EnumEstadoEdicion, EnumTipoEdicion } from 'lib/edicion';
 import SolicitudModel from 'models/solicitud_model'
 import supabase from "lib/supabase_config";
-import { setUncaughtExceptionCaptureCallback } from 'process';
-import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 export const getServerSideProps = withPageAuthRequired();
 
-const fetcherVSolicitud = (url: string): Promise<any> =>
-  fetch(url, { method: "GET" }).then(r => r.json());
+
 const fetcherPersona = (url: string): Promise<any> =>
-  fetch(url, { method: "GET" }).then(r => r.json());
-const fetcherEmpresa = (url: string): Promise<any> =>
   fetch(url, { method: "GET" }).then(r => r.json());
 const fetcherTipoDocumento = (url: string): Promise<any> =>
   fetch(url, { method: "GET" }).then(r => r.json());
@@ -56,13 +50,8 @@ export default function AxPageDocumento() {
   const [isLoading, setIsLoading] = useState(true);
   const [filtro, setFiltro] = useState<TypeFiltro>({ tipo_entidad: "NATURAL", id_persona: 0, id_empresa: 0, year_mes: '2022-08', id_tipo_documento: [], estado: ["FINALIZADO", "RECHAZADO"], cliente: "" });
   const [listaFiltro, setListaFiltro] = useState<SolicitudModel[]>([]);
-  const [tipoEdicion, setTipoEdicion] = useState(EnumTipoEdicion.VISUALIZAR)
-  const [esModalOpen, setEsModalOpen] = useState(false)
-  const [email, setEmail] = useState("")
   const [archivo, setArchivo] = useState("")
   const [nombreAlmacenamiento, setNombreAlmacenamiento] = useState("")
-  const [clic, setclic] = useState(false)
-  const [tipoModal, setTipoModal] = useState<string>('EDICION')
 
 
   useEffect(() => {
@@ -164,7 +153,7 @@ export default function AxPageDocumento() {
   return (
     <>
       {(lista && lista.filter(x=> x.id_persona == filtro.id_persona).length==0) ?
-        <h1> mmm</h1> 
+        <h1>No cuenta con documentos</h1> 
         :
 
         <main className="flex-1 pb-8">
@@ -332,7 +321,6 @@ export default function AxPageDocumento() {
                             {(item.estado == "FINALIZADO" || item.estado == "ENTREGADO") && item.url_archivo_solicitud != null &&
                               <button type="button"
                                 onClick={() => {
-                                  setTipoModal('ARCHIVO');
                                   setID(item.id)
                                   setArchivo(item.url_archivo_solicitud);
                                   setNombreAlmacenamiento("solicitud")
