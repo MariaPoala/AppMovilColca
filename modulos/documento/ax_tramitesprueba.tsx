@@ -86,13 +86,21 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         setTipoEdicion(EnumTipoEdicion.VISUALIZAR)
         setEstadoEdicion(EnumEstadoEdicion.GUARDADO);
     }
-    async function downloadImage(imageSrc:any) {
-        const image = await fetch(imageSrc)
-        const imageBlog = await image.blob()
-        const imageURL = URL.createObjectURL(imageBlog)
+    async function downloadImage(imageSrc: any) {
+        // const image = await fetch(imageSrc)
+        // const imageBlog = await image.blob()
+        // const imageURL = URL.createObjectURL(imageBlog)
+
+        // const link = document.createElement('a')
+        // link.href = imageURL
+        // link.download = 'formato.jpg'
+        // document.body.appendChild(link)
+        // link.click()
+        // document.body.removeChild(link)
+
 
         const link = document.createElement('a')
-        link.href = imageURL
+        link.href = imageSrc
         link.download = 'formato.jpg'
         document.body.appendChild(link)
         link.click()
