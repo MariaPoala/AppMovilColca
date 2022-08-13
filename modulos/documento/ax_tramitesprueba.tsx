@@ -139,20 +139,32 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     }
 
     async function fnDemo() {
-        fetch("/imgs/img-inicio-trabajador.jpg")
-            .then(resp => resp.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                // the filename you want
-                a.download = 'todo-1.png';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(() => alert('oh no!'));
+        // fetch("/imgs/img-inicio-trabajador.jpg")
+        //     .then(resp => resp.blob())
+        //     .then(blob => {
+        //         const url = window.URL.createObjectURL(blob);
+        //         const a = document.createElement('a');
+        //         a.style.display = 'none';
+        //         a.href = url;
+        //         // the filename you want
+        //         a.download = 'todo-1.png';
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         window.URL.revokeObjectURL(url);
+        //     })
+        //     .catch(() => alert('oh no!'));
+        downloadURI("/imgs/img-inicio-trabajador.jpg")
+    }
+
+    function downloadURI(uri: any) {
+        var link = document.createElement("a");
+        // If you don't know the name or want to use
+        // the webserver default set name = ''
+        link.setAttribute('download', "names.jpg");
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
     }
 
     useEffect(() => {
