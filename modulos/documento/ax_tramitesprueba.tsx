@@ -172,6 +172,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     }, [archivo])
     return (
         <>
+            <img src="/imgs/img-inicio-trabajador.jpg"></img>
             <nav className="flex items-start pb-1 sm:hidden" aria-label="Breadcrumb">
                 <button
                     onClick={() => { setEstadoEdicion(EnumEstadoEdicion.CANCELADO); }}
