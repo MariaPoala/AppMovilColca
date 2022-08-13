@@ -87,25 +87,35 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         setEstadoEdicion(EnumEstadoEdicion.GUARDADO);
     }
     async function downloadImage(imageSrc: any) {
-        // const image = await fetch(imageSrc)
-        // const imageBlog = await image.blob()
-        // const imageURL = URL.createObjectURL(imageBlog)
-
-        // const link = document.createElement('a')
-        // link.href = imageURL
-        // link.download = 'formato.jpg'
-        // document.body.appendChild(link)
-        // link.click()
-        // document.body.removeChild(link)
-
+        const image = await fetch(imageSrc)
+        const imageBlog = await image.blob()
+        const imageURL = URL.createObjectURL(imageBlog)
 
         const link = document.createElement('a')
-        link.href = imageSrc
+        link.href = imageURL
         link.download = 'formato.jpg'
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
     }
+
+    async function demo(imageSrc: any) {
+        fetch(imageSrc)
+            .then(resp => resp.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+                a.download = 'todo-1.png';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(() => alert('oh no!'));
+    }
+
     async function FndescargarImg() {
         try {
             if (archivo) {
@@ -128,29 +138,23 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         }
     }
 
-
-    async function subirArchivo(event: any) {
-        try {
-            setUploading(true)
-            if (!event.target.files || event.target.files.length === 0) {
-                throw new Error('You must select an image to upload.')
-            }
-            const file = event.target.files[0]
-            const fileExt = file.name.split('.').pop()
-            const fileName = `${Math.random()}.${fileExt}`
-            const filePath = `${fileName}`
-
-            let { error: uploadError } = await supabase.storage.from('archivo-requisito').upload(filePath, file)
-            if (uploadError) {
-                throw uploadError
-            }
-            setFormData({ name: 'url_imagen', value: fileName })
-        } catch (error: any) {
-            alert(error.message)
-        } finally {
-            setUploading(false)
-        }
+    async function fnDemo() {
+        fetch("/imgs/img-inicio-trabajador.jpg")
+            .then(resp => resp.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+                a.download = 'todo-1.png';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(() => alert('oh no!'));
     }
+
     useEffect(() => {
         FndescargarImg()
     }, [archivo])
@@ -245,6 +249,9 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                             {listaTipoDocConsideracion && listaTipoDocConsideracion.filter(item => item.id_tipo_documento == formData.id).map((item: any) =>
                                                 item.id_tipo_documento == 1 &&
                                                 <li
+                                                    onClick={() => {
+                                                        fnDemo()
+                                                    }}
                                                     key={item.nombre_consideracion}
                                                     className="relative bg-white  hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600"
                                                 >
