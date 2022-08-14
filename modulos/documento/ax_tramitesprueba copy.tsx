@@ -3,7 +3,7 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { Dialog, Transition } from "@headlessui/react";
 import { AxInput } from 'components/form'
 import { EnumTipoEdicion, EnumEstadoEdicion, TypeFormularioProps } from 'lib/edicion'
-import { CheckIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, LinkIcon, ReplyIcon } from "@heroicons/react/outline"
+import { CheckIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, LinkIcon, PlusCircleIcon } from "@heroicons/react/outline"
 import TipoDocumentoModel from 'models/tipo_documento_model'
 import * as uuid from 'uuid'
 // import { getDownloadURL, getStorage, listAll, ref, uploadBytes } from 'firebase/storage'
@@ -42,8 +42,6 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     const [uploading, setUploading] = useState(false)
     const [urlArchivo, setUrlArchivo] = useState("")
     const [archivo, setArchivo] = useState("")
-    const [nombreRequisito, setNombreRequisito] = useState("")
-
 
     useEffect(() => {
         setIsLoading(true)
@@ -119,7 +117,6 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
     }
 
     async function FndescargarImg() {
-        setIsLoading(true)
         try {
             if (archivo) {
                 const { signedURL, error } = await supabase.storage.from('archivo-requisito').createSignedUrl(archivo, 60)
@@ -127,8 +124,7 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                     throw error
                 }
                 if (signedURL) {
-                    setUrlArchivo(signedURL)
-                    // await downloadImage(signedURL)
+                    await downloadImage(signedURL)
                     // const a = document.createElement("a");
                     // a.href = signedURL;
                     // a.download = archivo;
@@ -140,7 +136,6 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         } catch (error: any) {
             console.log('Error downloading image: ', error.message)
         }
-        setIsLoading(false)
     }
 
     async function fnDemo() {
@@ -158,26 +153,26 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
         //         window.URL.revokeObjectURL(url);
         //     })
         //     .catch(() => alert('oh no!'));
-        // downloadURI("/imgs/img-inicio-trabajador.jpg")
+        downloadURI("/imgs/img-inicio-trabajador.jpg")
     }
 
-    // function downloadURI(uri: any) {
-    //     var link = document.createElement("a");
-    //     // If you don't know the name or want to use
-    //     // the webserver default set name = ''
-    //     link.setAttribute('download', "names.jpg");
-    //     link.href = uri;
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     link.remove();
-    // }
+    function downloadURI(uri: any) {
+        var link = document.createElement("a");
+        // If you don't know the name or want to use
+        // the webserver default set name = ''
+        link.setAttribute('download', "names.jpg");
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
 
     useEffect(() => {
         FndescargarImg()
-
-    }, [archivo, clicVisualizarArchivo])
+    }, [archivo])
     return (
         <>
+            <img src="/imgs/img-inicio-trabajador.jpg"></img>
             <nav className="flex items-start pb-1 sm:hidden" aria-label="Breadcrumb">
                 <button
                     onClick={() => { setEstadoEdicion(EnumEstadoEdicion.CANCELADO); }}
@@ -245,7 +240,6 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                             {listaTipoDocRequisito && listaTipoDocRequisito.filter(item => item.id_tipo_documento == formData.id).map((item: any) =>
                                                 <li onClick={() => {
                                                     setArchivo(item.imagen)
-                                                    setNombreRequisito(item.nombre_requisito)
                                                 }}
                                                     key={item.id}
                                                     className="relative bg-whitecursor-pointer ml-4 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 "
@@ -254,64 +248,31 @@ export default function AxGrupo({ ID, setID, setEstadoEdicion }: TypeFormularioP
                                                         <div className="min-w-0 flex-1 cursor-pointer">
                                                             <p className="mt-2 flex items-center text-[15px] text-gray-500 font-sans italic">
                                                                 - {item.nombre_requisito}
-                                                                {item.imagen && <LinkIcon onClick={() => {
-                                                                    setClicVisualizarArchivo(!clicVisualizarArchivo)
-                                                                }} className="flex-shrink-0 ml-2 h-4 w-4 text-blue-500" aria-hidden="true" />}
+                                                                <LinkIcon className="flex-shrink-0 ml-2 h-4 w-4 text-blue-500" aria-hidden="true" />
                                                             </p>
                                                         </div>
                                                     </div>
-
                                                 </li>
                                             )}
                                         </ul>
-                                        {clicVisualizarArchivo == true &&
-                                            <div className="md:col-span-6 border-2 border-indigo-200  mt-1 rounded ">
-                                                <div className="bg-white">
-                                                    <p className="text-[14px] capitalize ml-1" >Formato de ejemplo de {nombreRequisito}
-                                                        {isLoading ?
-                                                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"></circle>
-                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                            </svg> : <ReplyIcon onClick={() => {
-                                                                setClicVisualizarArchivo(!clicVisualizarArchivo)
-                                                            }} className=" text-indigo-500 h-5 w-5" ></ReplyIcon>}
-
-                                                    </p>
-                                                    {urlArchivo ? (
-                                                        <div className="">
-                                                            <ul role="list" className="content-start sm:grid sm:grid-cols-1 sm:gap-x-1 sm:gap-y-1 sm:space-y-0 lg:grid-cols-1 lg:gap-x-1">
-                                                                <li key={urlArchivo}>
-                                                                    <img className="lg:ml-20 md:ml:2 object-cover shadow-lg rounded-lg" src={urlArchivo} alt="" />
-                                                                </li>
-                                                            </ul>
-                                                        </div>)
-                                                        :
-                                                        (
-                                                            <div className="archivo-requisito no-image" style={{ height: 100, width: 100 }} />
-                                                        )}
-
-                                                </div>
-
-                                            </div>
-                                        }
                                     </div>
                                     <div className="md:col-span-6">
                                         <h2 className="font-semibold text-lg">Consideraciones</h2>
                                         <ul key={"consideracion"} role="list" className="divide-y divide-gray-200">
                                             {listaTipoDocConsideracion && listaTipoDocConsideracion.filter(item => item.id_tipo_documento == formData.id).map((item: any) =>
-                                                // item.id_tipo_documento == 1 &&
+                                                item.id_tipo_documento == 1 &&
                                                 <li
-                                                    // onClick={() => {
-                                                    //     fnDemo()
-                                                    // }}
-                                                    key={item.id}
+                                                    onClick={() => {
+                                                        fnDemo()
+                                                    }}
+                                                    key={item.nombre_consideracion}
                                                     className="relative bg-white  hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600"
                                                 >
                                                     <div className="flex justify-between space-x-3">
                                                         <div className="min-w-0 flex-1">
                                                             <p className="mt-2 ml-4 flex items-center text-[15px] text-gray-600  font-sans">
                                                                 <CheckIcon className="flex-shrink-0 mr-1 h-4 w-4 text-green-600" aria-hidden="true" />
-                                                                {item.nombre_consideracion} ({item.descripcion_consideracion})
+                                                                {item.nombre_consideracion}
                                                             </p>
                                                         </div>
                                                     </div>

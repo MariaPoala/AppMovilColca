@@ -5,7 +5,7 @@ export default function Axp404() {
     return (
         <>
             <Head>
-                <title>Pagina no encontrada nuevo cambio</title>
+                <title>Pagina no encontrada</title>
             </Head>
             <div className="rgb(249 250 251 / var(--tw-bg-opacity) min-h-full pt-16 pb-12 flex flex-col">
                 <main className="flex-grow flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">

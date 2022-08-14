@@ -1,13 +1,14 @@
 
 import { Fragment, useEffect, useState } from 'react'
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
+
 import useSWRImmutable from "swr/immutable"
 import useSWR from "swr"
-import { LinkIcon} from '@heroicons/react/outline';
-import {  AxInput } from 'components/form';
+import { LinkIcon } from '@heroicons/react/outline';
+import { AxInput } from 'components/form';
 import { EnumEstadoEdicion, EnumTipoEdicion } from 'lib/edicion';
 import SolicitudModel from 'models/solicitud_model'
 import supabase from "lib/supabase_config";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 export const getServerSideProps = withPageAuthRequired();
 
 
@@ -52,6 +53,7 @@ export default function AxPageDocumento() {
   const [listaFiltro, setListaFiltro] = useState<SolicitudModel[]>([]);
   const [archivo, setArchivo] = useState("")
   const [nombreAlmacenamiento, setNombreAlmacenamiento] = useState("")
+  const [urlArchivo, setUrlArchivo] = useState("")
 
 
   useEffect(() => {
@@ -111,9 +113,6 @@ export default function AxPageDocumento() {
     setListaFiltro(filtrado);
   }
 
-
-
-  
   async function FndescargarImg() {
     try {
       if (archivo) {
@@ -122,14 +121,14 @@ export default function AxPageDocumento() {
           throw error
         }
         if (signedURL) {
-          //PARA ABRIR EN UNA NUEVA PESTAÑA
-         const a= document.createElement("a");
-         a.href=signedURL;
-         a.download=archivo;
-         document.body.appendChild(a);
-         a.click();
-         document.body.removeChild(a); 
-
+          setUrlArchivo(signedURL)
+          //   //PARA ABRIR EN UNA NUEVA PESTAÑA
+          //  const a= document.createElement("a");
+          //  a.href=signedURL;
+          //  a.download=archivo;
+          //  document.body.appendChild(a);
+          //  a.click();
+          //  document.body.removeChild(a); 
         }
       }
     } catch (error: any) {
@@ -150,119 +149,114 @@ export default function AxPageDocumento() {
   useEffect(() => {
     const persona = listaPersona?.filter(x => x.email == user?.email);
     if (persona && persona[0]) {
-      
+
 
       setFiltro({ ...filtro, id_persona: persona[0].id })
     }
   }, [listaPersona, user])
   return (
     <>
-      {(lista && lista.filter(x=> x.id_persona == filtro.id_persona).length==0) ?
-        <h1>No cuenta con documentos</h1> 
-        :
-
-        <main className="flex-1 pb-8">
-          <div className={(isLoading ? "animate-pulse" : "") + " bg-white shadow"}>
-            <div className=" sm:px-4 lg:max-w-6xl ">
-              <div className="py-2 lg:border-t lg:border-gray-200">
-                <div className="flex-1 min-w-0">
-                  <div className="grid ml-4 mr-4 grid-cols-6 gap-y-6 gap-x-4 md:grid-cols-6">
-                    <div className="col-span-6">
-                      <AxInput name="year_mes" value={filtro.year_mes} label="Periodo" handleChange={handleChange} filtro={true} type="month" />
-                    </div>
-
+      <main className="flex-1 pb-8">
+        <div className={(isLoading ? "animate-pulse" : "") + " bg-white shadow"}>
+          <div className=" sm:px-4 lg:max-w-6xl ">
+            <div className="py-2 lg:border-t lg:border-gray-200">
+              <div className="flex-1 min-w-0">
+                <div className="grid ml-4 mr-4 grid-cols-6 gap-y-6 gap-x-4 md:grid-cols-6">
+                  <div className="col-span-6">
+                    <AxInput name="year_mes" value={filtro.year_mes} label="Periodo" handleChange={handleChange} filtro={true} type="month" />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="relative">
+        </div>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-2 bg-white text-sm text-gray-500">Estados</span>
+          </div>
+        </div>
+        <div className="mt-4">
+          <div className="flex items-center px-2 ">
+            <div className="flex-auto">
+              <div className="grid grid-cols-3 gap-2 ml-2 mr-4 place-items-stretch h-6  ">
+                {/* Card */}
+                {(estados.map((item: any) =>
+                  <ul key={item.name} className={(item.name == "REGISTRADO" ? " bg-indigo-600 hover:bg-indigo-700  ring-indigo-500"
+                    : item.name == "RECHAZADO" ? "bg-red-600 hover:bg-red-700 ring-red-500"
+                      : item.name == "VALIDADO" ? "bg-blue-600 hover:bg-blue-700 ring-blue-500"
+                        : item.name == "FINALIZADO" ? "bg-black hover:bg-black ring-black"
+                          : "bg-green-600 hover:bg-green-700 ring-green-500") + (filtro.estado.indexOf(item.name) != -1 && " ring-2 ring-offset-2 ") + " cursor-pointer font-Times h-5 w-24 inline-flex items-center px-3.5 py-2 border border-transparent text-xs leading-4 font-medium rounded-full shadow-sm text-white  focus:outline-none"}
+                    onClick={() => {
+                      handleChange({ target: { name: "FiltroEstado", value: item.name } });
+                      FnFiltrarLista();
+                    }}>
+                    {item.name}
+                  </ul>
+                )
+                )
+                }
+              </div>
+            </div>
+          </div>
+          <div className="relative mt-8">
             <div className="absolute inset-0 flex items-center" aria-hidden="true">
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-2 bg-white text-sm text-gray-500">Estados</span>
+              <span className="px-2 bg-white text-sm text-gray-500">Tipo Documento</span>
             </div>
           </div>
-          <div className="mt-4">
-            <div className="flex items-center px-2 ">
-              <div className="flex-auto">
-                <div className="grid grid-cols-3 gap-2 ml-2 mr-4 place-items-stretch h-6  ">
-                  {/* Card */}
-                  {(estados.map((item: any) =>
-                    <ul key={item.name} className={(item.name == "REGISTRADO" ? " bg-indigo-600 hover:bg-indigo-700  ring-indigo-500"
-                      : item.name == "RECHAZADO" ? "bg-red-600 hover:bg-red-700 ring-red-500"
-                        : item.name == "VALIDADO" ? "bg-blue-600 hover:bg-blue-700 ring-blue-500"
-                          : item.name == "FINALIZADO" ? "bg-black hover:bg-black ring-black"
-                            : "bg-green-600 hover:bg-green-700 ring-green-500") + (filtro.estado.indexOf(item.name) != -1 && " ring-2 ring-offset-2 ") + " cursor-pointer font-Times h-5 w-24 inline-flex items-center px-3.5 py-2 border border-transparent text-xs leading-4 font-medium rounded-full shadow-sm text-white  focus:outline-none"}
-                      onClick={() => {
-                        handleChange({ target: { name: "FiltroEstado", value: item.name } });
-                        FnFiltrarLista();
-                      }}>
-                      {item.name}
-                    </ul>
-                  )
-                  )
-                  }
-                </div>
-              </div>
+          <div className="sm:flex sm:items-center px-4 mt-4">
+            <div className="sm:flex-auto">
+              <div className="mt-2 grid  gap-5 grid-cols-2 sm:grid-cols-2  md:grid-cols-3  lg:grid-cols-5">
+                {/* Card */}
+                {(listaTipoDocumento && listaTipoDocumento.map((item: any) =>
+                (resultado.map(s => s.id == item.id &&
+                  <ul key={item.id} className={(filtro.id_tipo_documento.indexOf(item.id) != -1 ? "bg-indigo-600" : "bg-indigo-400") + "  cursor-pointer overflow-hidden shadow rounded-lg"}
+                    onClick={() => {
+                      handleChange({ target: { name: "FiltroGrupo", value: item.id } });
+                      FnFiltrarLista();
+                    }}>
 
-
-            </div>
-            <div className="relative mt-8">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="px-2 bg-white text-sm text-gray-500">Tipo Documento</span>
-              </div>
-            </div>
-            <div className="sm:flex sm:items-center px-4 mt-4">
-              <div className="sm:flex-auto">
-                <div className="mt-2 grid  gap-5 grid-cols-2 sm:grid-cols-2  md:grid-cols-3  lg:grid-cols-5">
-                  {/* Card */}
-                  {(listaTipoDocumento && listaTipoDocumento.map((item: any) =>
-                  (resultado.map(s => s.id == item.id &&
-                    <ul key={item.id} className={(filtro.id_tipo_documento.indexOf(item.id) != -1 ? "bg-indigo-600" : "bg-indigo-400") + "  cursor-pointer overflow-hidden shadow rounded-lg"}
-                      onClick={() => {
-                        handleChange({ target: { name: "FiltroGrupo", value: item.id } });
-                        FnFiltrarLista();
-                      }}>
-
-                      <div className=" mt-[2px] mb-1">
-                        <div className="flex items-center">
-                          <div className="ml-2 w-10 flex-1">
-                            <dl>
-                              <dt className="text-xs font-medium text-white truncate uppercase">{item.nombre}</dt>
-                              {/* <dd>
+                    <div className=" mt-[2px] mb-1">
+                      <div className="flex items-center">
+                        <div className="ml-2 w-10 flex-1">
+                          <dl>
+                            <dt className="text-xs font-medium text-white truncate uppercase">{item.nombre}</dt>
+                            {/* <dd>
                             <div className="text-sm font-medium text-indigo-100">{item.Descripcion}</div>
                           </dd> */}
-                            </dl>
-                          </div>
+                          </dl>
                         </div>
                       </div>
-                    </ul>
-                  )))
-                  )
-                  }
-                </div>
+                    </div>
+                  </ul>
+                )))
+                )
+                }
               </div>
             </div>
-            <div className="relative mt-2">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="px-2 bg-white text-sm text-gray-500">Solicitudes</span>
-              </div>
-            </div>
-
           </div>
+          <div className="relative mt-2">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-2 bg-white text-sm text-gray-500">Solicitudes</span>
+            </div>
+          </div>
+        </div>
 
-          <div className="mt-2 flex flex-col">
-            <div className="ml-1 mr-1 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+        <div className="mt-2 flex flex-col">
+          <div className="ml-1 mr-1 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                {(lista && lista.filter(x => x.id_persona == filtro.id_persona).length == 0) ?
+                  <h1>¡Aun no tiene docuementos registrados!</h1>
+                  :
                   <table className="min-w-full divide-y divide-gray-300 border-2 border-indigo-200">
                     <thead className="bg-gray-50">
                       <tr>
@@ -335,18 +329,17 @@ export default function AxPageDocumento() {
                                 <LinkIcon className='h-3 w-3'></LinkIcon>
                               </button>
                             }
-
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
+                }
               </div>
             </div>
           </div>
-        </main >
-      }
+        </div>
+      </main >
     </>
   )
 }
