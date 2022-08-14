@@ -1,15 +1,14 @@
 
 import { Fragment, useEffect, useState } from 'react'
+
 import useSWRImmutable from "swr/immutable"
 import useSWR from "swr"
-import { LinkIcon, XIcon } from '@heroicons/react/outline';
+import { LinkIcon } from '@heroicons/react/outline';
 import { AxInput } from 'components/form';
 import { EnumEstadoEdicion, EnumTipoEdicion } from 'lib/edicion';
 import SolicitudModel from 'models/solicitud_model'
 import supabase from "lib/supabase_config";
 import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
-import AxArchivo from 'modulos/documento/ax_ver_archivo'
-import { Dialog, Transition } from '@headlessui/react';
 export const getServerSideProps = withPageAuthRequired();
 
 
@@ -55,8 +54,6 @@ export default function AxPageDocumento() {
   const [archivo, setArchivo] = useState("")
   const [nombreAlmacenamiento, setNombreAlmacenamiento] = useState("")
   const [urlArchivo, setUrlArchivo] = useState("")
-  const [openModal, setOpenModal] = useState(false)
-  const [nombreDoc, setNombreDoc] = useState("")
 
 
   useEffect(() => {
@@ -258,7 +255,7 @@ export default function AxPageDocumento() {
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 {(lista && lista.filter(x => x.id_persona == filtro.id_persona).length == 0) ?
-                  <h1 className='text-sm text-slate-700 font-serif ml-1 mt-1'>¡Aun no tiene documentos registrados!</h1>
+                  <h1>¡Aun no tiene docuementos registrados!</h1>
                   :
                   <table className="min-w-full divide-y divide-gray-300 border-2 border-indigo-200">
                     <thead className="bg-gray-50">
@@ -324,10 +321,8 @@ export default function AxPageDocumento() {
                               <button type="button"
                                 onClick={() => {
                                   setID(item.id)
-                                  // setArchivo(item.url_archivo_solicitud);
-                                  // setNombreAlmacenamiento("solicitud")
-                                  setNombreDoc(item.tipo_documento_nombre)
-                                  setOpenModal(true)
+                                  setArchivo(item.url_archivo_solicitud);
+                                  setNombreAlmacenamiento("solicitud")
                                 }}
                                 className=" inline-flex items-center px-1 py-1 border  h-6 w-6 font-mono italic border-gray-300 shadow-sm text-xs leading-4 font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500     disabled:bg-indigo-300"
                               >
@@ -345,58 +340,6 @@ export default function AxPageDocumento() {
           </div>
         </div>
       </main >
-      <Transition.Root show={openModal} as={Fragment}>
-        <Dialog as="div" className="relative z-10 " onClose={setOpenModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
-
-          <div className="fixed z-10 inset-0 overflow-y-auto">
-
-            <div className="flex items-center sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
-
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enterTo="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              >
-                <Dialog.Panel className="relative bg-white  rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:p-6 ">
-                  <div className="px-4 sm:px-6">
-                    <div className="flex items-start justify-between">
-                      <Dialog.Title className="text-xs font-medium text-gray-600 font-serif italic">
-                        Archivo: {nombreDoc}
-                      </Dialog.Title>
-                      <div className="ml-3 flex h-7 items-center">
-                        <button
-                          type="button"
-                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          onClick={() => setOpenModal(false)}
-                        >
-                          <span className="sr-only">Close panel</span>
-                          <XIcon className="h-6 w-6" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                   <AxArchivo ID={ID}></AxArchivo>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition.Root>
     </>
   )
 }
