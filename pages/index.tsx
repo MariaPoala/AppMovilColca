@@ -27,8 +27,10 @@ const Home: NextPage = () => {
             <h2 className="mt-20 text-xl text-white">Municipalidad distrital de Colca</h2>
             <h3 className="text-xl text-white">Perla heroica del Canipaco</h3>
             <p className="mt-14 text-xl text-white">
-              La primera APP movil dirigido a los vecinos del distrito de Colca para informarce sobre los tramites que la municipalidad ofrece y de acceso a sus documentos realizados.
+              La primera APP movil dirigido a los vecinos del distrito de Colca para brindar información sobre los tramites que la municipalidad ofrece y de acceso a sus documentos realizados.
             </p>
+            <br></br>
+            <br></br>
           </div>
         </div>
       </div>
