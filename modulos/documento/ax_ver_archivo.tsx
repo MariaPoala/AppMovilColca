@@ -25,6 +25,7 @@ export default function AxSolicitudArchivo({ ID }: any) {
     const [clic, setclic] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [urlArchivo, setUrlArchivo] = useState("")
+    const [archivo, setArchivo] = useState("")
 
     useEffect(() => {
         setIsLoading(true)
@@ -63,6 +64,28 @@ export default function AxSolicitudArchivo({ ID }: any) {
     }
 
 
+    async function FnGuardar() {
+        try {
+            if (formData.url_archivo_solicitud) {
+                const { signedURL, error } = await supabase.storage.from('archivo-solicitud').createSignedUrl(archivo, 60)
+                if (error) {
+                    throw error
+                }
+                if (signedURL) {
+                    //   setUrlArchivo(signedURL)
+                    //   //PARA ABRIR EN UNA NUEVA PESTAÑA
+                    const a = document.createElement("a");
+                    a.href = signedURL;
+                    a.download = formData.url_archivo_solicitud;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            }
+        } catch (error: any) {
+            console.log('Error downloading image: ', error.message)
+        }
+    }
 
 
     return (
@@ -71,7 +94,9 @@ export default function AxSolicitudArchivo({ ID }: any) {
                 {/*PORTADA*/}
                 <div className="h-1 mt-1 bg-indigo-700 rounded-sm text-slate-700 italic" />
                 {/*FORMULARIO*/}
-                <button type="button" className=" border-indigo-300 rounded-xs bg-indigo-100">Descargar</button>
+                <button type="button" className=" border-indigo-300 rounded-xs bg-indigo-100" onClick={() => {
+                   FnGuardar()
+                }}>Descargar</button>
                 <div className="px-0 py-0  ">
                     <div className="p-4 md:p-2">
                         {isDownload ?
