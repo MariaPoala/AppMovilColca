@@ -71,7 +71,7 @@ export default function AxSolicitudArchivo({ ID }: any) {
                 {/*PORTADA*/}
                 <div className="h-1 mt-1 bg-indigo-700 rounded-sm" />
                 {/*FORMULARIO*/}
-                <button type="button" className="bg-indigo">Descargar</button>
+                <button type="button" className=" border-indigo-300 rounded-xs bg-indigo-100">Descargar</button>
                 <div className="px-0 py-0  ">
                     <div className="p-4 md:p-2">
                         {isDownload ?
