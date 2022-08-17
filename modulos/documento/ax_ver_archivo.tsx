@@ -74,12 +74,7 @@ export default function AxSolicitudArchivo({ ID }: any) {
                 if (signedURL) {
                     //   setUrlArchivo(signedURL)
                     //   //PARA ABRIR EN UNA NUEVA PESTAÑA
-                    const a = document.createElement("a");
-                    a.href = signedURL;
-                    a.download = formData.url_archivo_solicitud;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    window.open(signedURL, "_blank")?.focus();
                 }
             }
         } catch (error: any) {
