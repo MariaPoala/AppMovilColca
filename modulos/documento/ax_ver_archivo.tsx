@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useState } from "react";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
+
 import SolicitudModel from 'models/solicitud_model'
 import DocumentoModel from "models/documento_model";
 import supabase from "lib/supabase_config";
 import { EyeIcon, EyeOffIcon, DownloadIcon } from "@heroicons/react/outline";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 export const getServerSideProps = withPageAuthRequired()
 
 const formReducer = (state: SolicitudModel, event: any): SolicitudModel => {
@@ -70,6 +71,7 @@ export default function AxSolicitudArchivo({ ID }: any) {
                 {/*PORTADA*/}
                 <div className="h-1 mt-1 bg-indigo-700 rounded-sm" />
                 {/*FORMULARIO*/}
+                <button type="button" className="bg-indigo">Descargar</button>
                 <div className="px-0 py-0  ">
                     <div className="p-4 md:p-2">
                         {isDownload ?

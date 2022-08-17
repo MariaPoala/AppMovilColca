@@ -7,9 +7,10 @@ import { AxInput } from 'components/form';
 import { EnumEstadoEdicion, EnumTipoEdicion } from 'lib/edicion';
 import SolicitudModel from 'models/solicitud_model'
 import supabase from "lib/supabase_config";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
+
 import AxArchivo from 'modulos/documento/ax_ver_archivo'
 import { Dialog, Transition } from '@headlessui/react';
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 export const getServerSideProps = withPageAuthRequired();
 
 
